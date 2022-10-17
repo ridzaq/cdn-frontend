@@ -8,9 +8,11 @@ function requireHTTPS(req, res, next) {
 
 const express = require('express');
 const app = express();
+const cors = require('cors'); 
 
 app.use(requireHTTPS);
 app.use(express.static('./dist/cdn-frontend'));
+app.use(cors());
 
 app.get('/*', (req, res) =>
     res.sendFile('index.html', {root: 'dist/cdn-frontend/'}),
