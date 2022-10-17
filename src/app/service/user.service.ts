@@ -10,7 +10,7 @@ export class UserService {
   backendUrl: string;
 
   constructor(private http: HttpClient) {
-    this.backendUrl = 'https://cdn-backend.herokuapp.com/user'
+    this.backendUrl = 'http://cdn-backend.herokuapp.com/user'
   }
 
   addUser(usr: CreateUserDto): Observable<User>{
