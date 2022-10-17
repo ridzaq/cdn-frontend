@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid  px-4">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">Complete Developer Network</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -7,18 +7,22 @@
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <button class="btn btn-outline-success my-2 my-sm-0" (click)="open(addModal)">Add Employee</button>
+            <button class="btn btn-success my-2 my-sm-0" (click)="open(addModal)"><i class="bi bi-person-plus-fill"></i></button>
         </div>
     </nav>
-
-    <table class="table">
+    <div *ngIf="loadingTable" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    <table *ngIf="!loadingTable" class="table">
         <thead>
           <tr>
             <th scope="col">#</th>
             <th scope="col">Username</th>
             <th scope="col">Email</th>
             <th scope="col">Phone</th>
-            <th scope="col">Skillsets</th>
+            <!-- <th scope="col">Skillsets</th> -->
             <th scope="col">Hobby</th>
             <th scope="col">Action</th>
           </tr>
@@ -29,11 +33,11 @@
             <td>{{usr.username}}</td>
             <td>{{usr.email}}</td>
             <td>{{usr.phone}}</td>
-            <td>{{usr.skillsets}}</td>
+            <!-- <td>{{usr.skillsets}}</td> -->
             <td>{{usr.hobby}}</td>
             <td>
-                <button type="button" class="btn btn-outline-primary me-2" (click)="editUser(editModal, usr)">Edit</button>
-                <button type="button" class="btn btn-outline-danger" (click)="confirmModalOpen(confirmationModal, usr)">Delete</button>
+                <button type="button" class="btn btn-outline-primary me-2" (click)="editUser(editModal, usr)"><i class="bi bi-pencil-fill"></i></button>
+                <button type="button" class="btn btn-outline-danger" (click)="confirmModalOpen(confirmationModal, usr)"><i class="bi bi-person-x-fill"></i></button>
             </td>
           </tr>
         </tbody>
@@ -47,36 +51,40 @@
                 (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="user"> 
-                <input type="hidden" formControlName="id" class="form-control" id="id" aria-describedby="emailHelp">               
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" formControlName="username" class="form-control" id="username" aria-describedby="emailHelp">
+            <form [formGroup]="user" class="row g-3"> 
+                <input type="hidden" formControlName="id" class="form-control" id="id">               
+                <div class="col-md-6" >
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" formControlName="username" class="form-control" id="username" required>
+                    
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" formControlName="email" class="form-control" id="email" aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" formControlName="email" class="form-control" id="email" >
+                    <div *ngIf="emailInvalid">Invalid email!</div>
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Phone</label>
-                    <input type="text" formControlName="phone" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" formControlName="phone" class="form-control" id="phone">
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Skillsets</label>
-                    <input type="text" formControlName="skillsets" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    <label for="hobby" class="form-label">Hobby</label>
+                    <input type="text" formControlName="hobby" class="form-control" id="hobby">
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Hobby</label>
-                    <input type="text" formControlName="hobby" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-12">
+                    <label for="skillsets" class="form-label">Skillsets</label>
+                    <textarea  formControlName="skillsets" class="form-control" id="skillsets"></textarea>
                 </div>
+
                 <div class="modal-footer">
+                    <div *ngIf="!formValid" class="alert alert-danger" role="alert">
+                        Please fill all the info !
+                      </div>
                     <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
                     <button type="button" class="btn btn-outline-success" (click)="save(modal)">Save</button>
                 </div>
@@ -92,37 +100,42 @@
                 (click)="modal.dismiss('Cross click')"></button>
         </div>
         <div class="modal-body">
-            <form [formGroup]="user">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" formControlName="username" class="form-control" id="username" aria-describedby="emailHelp">
+            <form [formGroup]="user" class="row g-3"> 
+                <input type="hidden" formControlName="id" class="form-control" id="id">               
+                <div class="col-md-6" >
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" formControlName="username" class="form-control" id="username" required>
+                    
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Email address</label>
-                    <input type="email" formControlName="email" class="form-control" id="email" aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" formControlName="email" class="form-control" id="email" >
+                    <div *ngIf="emailInvalid">Invalid email!</div>
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Phone</label>
-                    <input type="text" formControlName="phone" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" formControlName="phone" class="form-control" id="phone">
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Skillsets</label>
-                    <input type="text" formControlName="skillsets" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-6">
+                    <label for="hobby" class="form-label">Hobby</label>
+                    <input type="text" formControlName="hobby" class="form-control" id="hobby">
                 </div>
 
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Hobby</label>
-                    <input type="text" formControlName="hobby" class="form-control" id="exampleInputEmail1"
-                        aria-describedby="emailHelp">
+                <div class="col-md-12">
+                    <label for="skillsets" class="form-label">Skillsets</label>
+                    <textarea  formControlName="skillsets" class="form-control" id="skillsets"></textarea>
                 </div>
+
                 <div class="modal-footer">
+                    <div *ngIf="!formValid" class="alert alert-danger" role="alert">
+                        Please fill all the info !
+                      </div>
                     <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-                    <button type="button" class="btn btn-outline-success" (click)="updateUser(modal)">Save</button>
+                    <button type="button" class="btn btn-outline-success" (click)="save(modal)">Save</button>
                 </div>
             </form>
         </div>

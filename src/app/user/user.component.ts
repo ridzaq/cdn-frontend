@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CreateUserDto } from 'src/app/model/create-user.dto';
 import { User } from 'src/app/model/user';
@@ -16,23 +16,27 @@ export class UserComponent implements OnInit {
   userDto: CreateUserDto = new CreateUserDto();
   userObj : User = new User();
   userList : User[] = [];
-
+  loadingTable: boolean = false;
+  formValid: boolean = true;
+  emailInvalid: boolean = false;
   constructor(private modalService: NgbModal, private formBuilder: FormBuilder, private employeeService: UserService) { }
 
   ngOnInit(): void {
     this.user = this.formBuilder.group({
       id: [''],
-      username: ['ridzaq'],
-      email: ['ridzaq09@gmail.com'],
-      phone: ['0166509221'],
-      skillsets: ['test'],
-      hobby: ['sfdsdfs']
+      username: ['',[Validators.required]],
+      email: ['',[Validators.required,Validators.email]],
+      phone: ['',[Validators.required]],
+      skillsets: ['',[Validators.required]],
+      hobby: ['',[Validators.required]]
     })
 
     this.getAllUser();
   }
 
   public open(modal: any): void {
+    this.formValid = true;
+    this.emailInvalid = false;
     this.modalService.open(modal);
   }
 
@@ -48,6 +52,14 @@ export class UserComponent implements OnInit {
 
   save(modal:any): void{
     console.log(this.user);
+    this.formValid = true;
+    if(this.user.controls['email'].invalid){
+      this.emailInvalid = true;
+    }
+    if(this.user.invalid){
+      this.formValid = false;
+      return;
+    }
 
     this.userDto.email = this.user.value.email;
     this.userDto.hobby = this.user.value.hobby;
@@ -57,6 +69,7 @@ export class UserComponent implements OnInit {
 
     this.employeeService.addUser(this.userDto).subscribe({
       next: (v) => {
+        console.log("heeeee");
         this.modalService.dismissAll(modal);
         this.getAllUser();
       },
@@ -67,10 +80,13 @@ export class UserComponent implements OnInit {
   }
 
   getAllUser(){
+    this.loadingTable = true;
     this.employeeService.getAllUser().subscribe({
-      next: (v) => this.userList = v,
+      next: (v) => {
+        this.userList = v
+      },
       error: (e) => console.log(e),
-      complete: () => console.info('complete')
+      complete: () => this.loadingTable = false
     })
   }
 
