@@ -1,6 +1,7 @@
 {
     "/":{
-        "target":"http://localhost:3000",
+        "target":"https://cdn-backend.herokuapp.com/",
         "secure":false
     }
+    
 }
